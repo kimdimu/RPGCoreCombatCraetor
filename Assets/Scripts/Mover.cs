@@ -1,4 +1,4 @@
-﻿using RPG.Combat;
+﻿using RPG.Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         //[SerializeField] Transform target;
         NavMeshAgent NavMeshAgent;
@@ -21,17 +21,19 @@ namespace RPG.Movement
 
         public void StartMoveAction(Vector3 destination)
         {
-            GetComponent<Fighter>().Cancel();
+            GetComponent<ActionScheduler>().StartAction(this);
+            //GetComponent<Fighter>().Cancel();
             MoveTo(destination);
         }
 
         public void MoveTo(Vector3 destination)
         {
+
             NavMeshAgent.destination = destination;
             NavMeshAgent.isStopped = false;
         }
 
-        public void Stop()
+        public void Cancel()
         {
             NavMeshAgent.isStopped = true;
         }
@@ -39,9 +41,9 @@ namespace RPG.Movement
         {
             Vector3 velocity = NavMeshAgent.velocity;
             Vector3 localVelocity = transform.InverseTransformDirection(velocity);
-            print(localVelocity);
             float speed = localVelocity.z;
             GetComponent<Animator>().SetFloat("forwardSpeed", speed);
         }
+
     }
 }

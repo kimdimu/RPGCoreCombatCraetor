@@ -28,9 +28,9 @@ namespace RPG.control
             foreach(RaycastHit hit in hits)
             {
                 CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-                if (target == null) continue;
+                if(!GetComponent<Fighter>().CanAttack(target)) continue;
 
-                if(Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0))
                 {
                     GetComponent<Fighter>().Attack(target);
                 }
@@ -45,6 +45,8 @@ namespace RPG.control
             bool hasHit = Physics.Raycast(GetMouseRay(), out hit);//out is keyword
             if (hasHit)
             {
+                print(hit.transform.name);
+
                 if (Input.GetMouseButton(0))
                 {
                     //GetComponent<Fighter>().Cancel();
