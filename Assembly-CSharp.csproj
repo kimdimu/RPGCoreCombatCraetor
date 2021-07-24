@@ -62,10 +62,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Cinematics\CinematicControllerRemover.cs" />
     <Compile Include="Assets\Scripts\Cinematics\CinematicTrigger.cs" />
     <Compile Include="Assets\Scripts\Combat\CombatTarget.cs" />
     <Compile Include="Assets\Scripts\Combat\Fighter.cs" />
-    <Compile Include="Assets\Scripts\Combat\IAction.cs" />
     <Compile Include="Assets\Scripts\Combat\IDamage.cs" />
     <Compile Include="Assets\Scripts\Controller\AIController.cs" />
     <Compile Include="Assets\Scripts\Controller\PatrolPath.cs" />
@@ -73,7 +73,16 @@
     <Compile Include="Assets\Scripts\Core\ActionScheduler.cs" />
     <Compile Include="Assets\Scripts\Core\FollowCamera.cs" />
     <Compile Include="Assets\Scripts\Core\Health.cs" />
+    <Compile Include="Assets\Scripts\Core\IAction.cs" />
+    <Compile Include="Assets\Scripts\Core\PersistentObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\Movement\Mover.cs" />
+    <Compile Include="Assets\Scripts\Saving\ISaveable.cs" />
+    <Compile Include="Assets\Scripts\Saving\SaveableEntity.cs" />
+    <Compile Include="Assets\Scripts\Saving\SavingSystem.cs" />
+    <Compile Include="Assets\Scripts\Saving\SerializableVector3.cs" />
+    <Compile Include="Assets\Scripts\SceneManagement\Fader.cs" />
+    <Compile Include="Assets\Scripts\SceneManagement\Portal.cs" />
+    <Compile Include="Assets\Scripts\SceneManagement\SavingWrapper.cs" />
     <None Include="Assets\Asset Packs\Synty - Polygon Student Sample\README - Usage Rights for these assets.txt" />
     <None Include="Assets\Asset Packs\Animations by Explosive\README - Usage Rights for these assets 1.txt" />
     <Reference Include="UnityEngine">
@@ -607,6 +616,9 @@
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
@@ -625,17 +637,14 @@
     <Reference Include="Unity.Rider.Editor">
       <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Cinemachine">
-      <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
-    </Reference>
-    <Reference Include="com.unity.cinemachine.editor">
-      <HintPath>E:/GameProgramming/RPGCoreCombatCraetor/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>

@@ -21,7 +21,7 @@ namespace RPG.Control
             {
                 return;
             }
-            print("nothing");
+            //print("nothing");
         }
 
         private bool InteractWithCombat()
@@ -49,7 +49,7 @@ namespace RPG.Control
             bool hasHit = Physics.Raycast(GetMouseRay(), out hit);//out is keyword
             if (hasHit)
             {
-                print(hit.transform.name);
+                //print(hit.transform.name);
 
                 if (Input.GetMouseButton(0))
                 {
