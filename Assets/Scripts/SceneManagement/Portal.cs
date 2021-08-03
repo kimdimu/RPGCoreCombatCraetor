@@ -42,18 +42,18 @@ namespace RPG.SceneManagement
 
             //Save cur lev
             SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
-            savingWrapper.Save();//바뀌기전
+            //savingWrapper.Save();//바뀌기전
 
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
 
             //Load cur lev
-            savingWrapper.Load();//바뀐후
+            //savingWrapper.Load();//바뀐후
 
 
             Portal otherPortal = GetOtherPortal();
             UpdatePlayer(otherPortal);
 
-            savingWrapper.Save();//바뀐후 씬을 다시 저장
+            //savingWrapper.Save();//바뀐후 씬을 다시 저장
 
             yield return new WaitForSeconds(fadeWaitTime);
 
