@@ -67,6 +67,8 @@
     <Compile Include="Assets\Scripts\Combat\CombatTarget.cs" />
     <Compile Include="Assets\Scripts\Combat\Fighter.cs" />
     <Compile Include="Assets\Scripts\Combat\IDamage.cs" />
+    <Compile Include="Assets\Scripts\Combat\Weapon.cs" />
+    <Compile Include="Assets\Scripts\Combat\WeaponPickUp.cs" />
     <Compile Include="Assets\Scripts\Controller\AIController.cs" />
     <Compile Include="Assets\Scripts\Controller\PatrolPath.cs" />
     <Compile Include="Assets\Scripts\Controller\PlayerController.cs" />

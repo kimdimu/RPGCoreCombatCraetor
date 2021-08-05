@@ -1,5 +1,6 @@
 ﻿using RPG.Core;
 using RPG.Movement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,13 +9,28 @@ namespace RPG.Combat
 {
     public class Fighter : MonoBehaviour, IAction
     {
-        [SerializeField] float weaponRange = 2f;
-        [SerializeField] float weaponDamage = 5f;
-        [SerializeField] float timeBetweenAttacks= 1f;
-        float timeSinceLastAttack = Mathf.Infinity;
 
+        [SerializeField] float timeBetweenAttacks= 1f;
+        [SerializeField] Transform handTransform = null;
+        [SerializeField] Weapon defaultWeapon = null;
+        Weapon curWeapon = null;
+
+
+        float timeSinceLastAttack = Mathf.Infinity;
         [SerializeField] Health target;
 
+
+        private void Start()
+        {
+            EquipWeapon(defaultWeapon);
+        }
+        public void EquipWeapon(Weapon weapon)
+        {
+            //if (weapon == null) return;
+            curWeapon = weapon;
+            Animator animator = GetComponent<Animator>();
+            weapon.Spawn(handTransform, animator);
+        }
         private void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
@@ -67,11 +83,11 @@ namespace RPG.Combat
             //Health healthComponent = target.GetComponent<Health>();
             // healthComponent.TakeDamage(weaponDamage);
             if (target == null) return;
-            target.TakeDamage(weaponDamage);
+            target.TakeDamage(curWeapon.GetWeaponDamage());
         }
         private bool GetIsInRange()
         {
-            return Vector3.Distance(target.transform.position, transform.position) < weaponRange;
+            return Vector3.Distance(target.transform.position, transform.position) < curWeapon.GetWeaponRange();
         }
 
         public void Attack(GameObject combatTarget)
@@ -92,5 +108,7 @@ namespace RPG.Combat
             GetComponent<Animator>().ResetTrigger("attack");
             GetComponent<Animator>().SetTrigger("comeback");
         }
+
+
     }
 }

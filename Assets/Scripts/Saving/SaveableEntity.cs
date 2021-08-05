@@ -1,16 +1,17 @@
+using System;
 using System.Collections.Generic;
+using RPG.Core;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace RPG.Saving
 {
-    [ExecuteAlways] //플레이타임, 에디트타임에도 실행된다.
+    [ExecuteAlways]
     public class SaveableEntity : MonoBehaviour
     {
         [SerializeField] string uniqueIdentifier = "";
-        //[SerializeField] string uniqueIdentifier = System.Guid.NewGuid().ToString();
-        //고유식별자는 변경되면 안되고 지속되어야 한다.
-        //static Dictionary<string, SaveableEntity> globalLookup = new Dictionary<string, SaveableEntity>();
+        static Dictionary<string, SaveableEntity> globalLookup = new Dictionary<string, SaveableEntity>();
 
         public string GetUniqueIdentifier()
         {
@@ -19,71 +20,65 @@ namespace RPG.Saving
 
         public object CaptureState()
         {
-            return new SerializableVector3(transform.position);
+            Dictionary<string, object> state = new Dictionary<string, object>();
+            foreach (ISaveable saveable in GetComponents<ISaveable>())
+            {
+                state[saveable.GetType().ToString()] = saveable.CaptureState();
+            }
+            return state;
         }
 
-        public void RestoreState(object state)
+        public void RestoreState(Dictionary<string, object> state)
         {
-            //GetComponent<NavMeshAgent>().enabled = false;
-            transform.position = ((SerializableVector3)state).ToVector();
-            //GetComponent<NavMeshAgent>().enabled = true;
-            //GetComponent<ActionScheduler>().CancelCurrentAction();
+            //Dictionary<string, object> stateDict = (Dictionary<string, object>)state;
+            foreach (ISaveable saveable in GetComponents<ISaveable>())
+            {
+                string typeString = saveable.GetType().ToString();
+                if (state.ContainsKey(typeString))
+                {
+                    saveable.RestoreState(state[typeString]);
+                }
+            }
         }
 
 #if UNITY_EDITOR
         private void Update()
         {
-            if (Application.IsPlaying(gameObject)) return;//플레이중이라면
-            
-            if (string.IsNullOrEmpty(gameObject.scene.path)) return; //빈 경로는 프리펩을 의미한다. 그래서 리턴해야. 프리펩에서는 식별자를 비어있게 설정한다.
+            if (Application.IsPlaying(gameObject)) return;
+            if (string.IsNullOrEmpty(gameObject.scene.path)) return;
 
-            SerializedObject serializedobject = new SerializedObject(this);
-            SerializedProperty property = serializedobject.FindProperty("uniqueIdentifier");//uniqueIdentifier 에서 직렬화된 속성을 받아온다.
+            SerializedObject serializedObject = new SerializedObject(this);
+            SerializedProperty property = serializedObject.FindProperty("uniqueIdentifier");
 
-            if (string.IsNullOrEmpty(property.stringValue))//property.stringValue == "" 대신 두개를 한꺼번에 하는 표현
+            if (string.IsNullOrEmpty(property.stringValue) || !IsUnique(property.stringValue))
             {
-                uniqueIdentifier = System.Guid.NewGuid().ToString();
-                serializedobject.ApplyModifiedProperties();
+                property.stringValue = System.Guid.NewGuid().ToString();
+                serializedObject.ApplyModifiedProperties();
             }
+
+            globalLookup[property.stringValue] = this;
         }
 #endif
-        //#if UNITY_EDITOR
-        //        private void Update() {
-        //            if (Application.IsPlaying(gameObject)) return;
-        //            if (string.IsNullOrEmpty(gameObject.scene.path)) return;
 
-        //            SerializedObject serializedObject = new SerializedObject(this);
-        //            SerializedProperty property = serializedObject.FindProperty("uniqueIdentifier");
+        private bool IsUnique(string candidate)
+        {
+            if (!globalLookup.ContainsKey(candidate)) return true;
 
-        //            if (string.IsNullOrEmpty(property.stringValue) || !IsUnique(property.stringValue))
-        //            {
-        //                property.stringValue = System.Guid.NewGuid().ToString();
-        //                serializedObject.ApplyModifiedProperties();
-        //            }
+            if (globalLookup[candidate] == this) return true;
 
-        //            globalLookup[property.stringValue] = this;
-        //        }
-        //#endif
+            if (globalLookup[candidate] == null)
+            {
+                globalLookup.Remove(candidate);
+                return true;
+            }
 
-        //        private bool IsUnique(string candidate)
-        //        {
-        //            if (!globalLookup.ContainsKey(candidate)) return true;
+            if (globalLookup[candidate].GetUniqueIdentifier() != candidate)
+            {
+                globalLookup.Remove(candidate);
+                return true;
+            }
 
-        //            if (globalLookup[candidate] == this) return true;
-
-        //            if (globalLookup[candidate] == null)
-        //            {
-        //                globalLookup.Remove(candidate);
-        //                return true;
-        //            }
-
-        //            if (globalLookup[candidate].GetUniqueIdentifier() != candidate)
-        //            {
-        //                globalLookup.Remove(candidate);
-        //                return true;
-        //            }
-
-        //            return false;
-        //        }
+            return false;
+        }
     }
 }
