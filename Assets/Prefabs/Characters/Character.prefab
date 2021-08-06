@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 6175529454804213178}
   - component: {fileID: 1614431958776894779}
   - component: {fileID: 6237864738118030308}
-  - component: {fileID: 218073165}
   - component: {fileID: 621417484545312339}
   - component: {fileID: 5394182354708652422}
   - component: {fileID: 761266464584876424}
@@ -148,7 +147,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeBetweenAttacks: 2
-  handTransform: {fileID: 0}
+  rightHandTransform: {fileID: 0}
+  leftHandTransform: {fileID: 0}
   defaultWeapon: {fileID: 11400000, guid: 5daee7e30e67b994e954df4a0909f201, type: 2}
   target: {fileID: 0}
 --- !u!114 &6175529454804213178
@@ -189,20 +189,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uniqueIdentifier: player
---- !u!136 &218073165
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2752454310016117315}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.3
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!54 &621417484545312339
 Rigidbody:
   m_ObjectHideFlags: 0

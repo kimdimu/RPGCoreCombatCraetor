@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Combat\CombatTarget.cs" />
     <Compile Include="Assets\Scripts\Combat\Fighter.cs" />
     <Compile Include="Assets\Scripts\Combat\IDamage.cs" />
+    <Compile Include="Assets\Scripts\Combat\Projectile.cs" />
     <Compile Include="Assets\Scripts\Combat\Weapon.cs" />
     <Compile Include="Assets\Scripts\Combat\WeaponPickUp.cs" />
     <Compile Include="Assets\Scripts\Controller\AIController.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Assets\Scripts\SceneManagement\Portal.cs" />
     <Compile Include="Assets\Scripts\SceneManagement\SavingWrapper.cs" />
     <None Include="Assets\Asset Packs\Synty - Polygon Student Sample\README - Usage Rights for these assets.txt" />
+    <None Include="Assets\Asset Packs\SimpleFX - Synty\Materials\UnlitVertexColour_Alpha.shader" />
     <None Include="Assets\Asset Packs\Animations by Explosive\README - Usage Rights for these assets 1.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.26f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
