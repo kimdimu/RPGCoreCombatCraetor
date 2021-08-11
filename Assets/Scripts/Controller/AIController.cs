@@ -1,9 +1,7 @@
-﻿using RPG.Combat;
+﻿using RPG.Attributes;
+using RPG.Combat;
 using RPG.Core;
 using RPG.Movement;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 namespace RPG.Control
 {
@@ -24,7 +22,6 @@ namespace RPG.Control
         float timeSinceArriveAtWaypoint = Mathf.Infinity;
         int patrolPathIdx=0;
 
-        bool isSuspicion = false;
         private void Start()
         {
             fighter = GetComponent<Fighter>();

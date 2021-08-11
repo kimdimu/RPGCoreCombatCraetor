@@ -30,6 +30,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 2752454310016117315, guid: cc5b9639102a4574797ba7aafbdb9e6c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 4025628503244034443, guid: cc5b9639102a4574797ba7aafbdb9e6c,
         type: 3}
       propertyPath: handTransform

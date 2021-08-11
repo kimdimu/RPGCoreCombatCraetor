@@ -82,7 +82,7 @@ namespace RPG.Saving
                 string id = saveable.GetUniqueIdentifier();
                 if (state.ContainsKey(id))
                 {
-                    saveable.RestoreState(state);
+                    saveable.RestoreState((Dictionary<string, object>)state[id]);
                 }
             }
         }

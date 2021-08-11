@@ -1,5 +1,4 @@
-﻿using System;
-using RPG.Core;
+﻿using RPG.Attributes;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -26,9 +25,15 @@ namespace RPG.Combat
                 GameObject weapon = Instantiate(equippedPrefab, handTf);
                 weapon.name = weaponName;
             }
-            if (animatorOverride != null)
+
+            var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
+            if (animatorOverride != null) //오버라이드가 있다면?
             {
                 animator.runtimeAnimatorController = animatorOverride;
+            }
+            else if (overrideController != null)//오버라이드가 없고 부모 애니메이터가 있다면?
+            {
+                animator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
             }
         }
 
@@ -58,10 +63,10 @@ namespace RPG.Combat
             return projectile != null;
         }
 
-        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target)
+        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target, GameObject instigator, float calculatedDamage)
         {
             Projectile projectileInst = Instantiate(projectile, GetTransform(rightHand,leftHand).position, Quaternion.identity);
-            projectileInst.SetTarget(target, weaponDamage);
+            projectileInst.SetTarget(target, instigator, calculatedDamage);
         }
 
         public float GetWeaponRange()

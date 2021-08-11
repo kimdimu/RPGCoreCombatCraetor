@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9065192601518954547}
   - component: {fileID: 7855592806181125538}
   m_Layer: 0
-  m_Name: FireBallProjectile
+  m_Name: FireBall Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   isHoming: 1
-  hitEffect: {fileID: 180128, guid: 6586ff0f14125534cae2f5d8f04b7871, type: 3}
+  hitEffect: {fileID: 2876890793200602088, guid: b437ea91a0e6d2f4da430002b6928a3e,
+    type: 3}
+  maxLifeTime: 10
+  destroyOnHit:
+  - {fileID: 7226620593695908287}
+  lifeAfterImpact: 0.5
 --- !u!65 &7855592806181125538
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -59,8 +64,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.081853, y: 0.62318754, z: 0.081853025}
-  m_Center: {x: 0, y: 0.4043771, z: -1.3588814e-15}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 2.07}
 --- !u!1001 &648086944866974128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72,6 +77,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire
+      objectReference: {fileID: 0}
+    - target: {fileID: 4533086502003784296, guid: 912d3fb7a40cb5148bad835777591d22,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5060606270578113660, guid: 912d3fb7a40cb5148bad835777591d22,
         type: 3}
@@ -91,7 +101,7 @@ PrefabInstance:
     - target: {fileID: 5060606270578113660, guid: 912d3fb7a40cb5148bad835777591d22,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1.26
       objectReference: {fileID: 0}
     - target: {fileID: 5060606270578113660, guid: 912d3fb7a40cb5148bad835777591d22,
         type: 3}
@@ -128,11 +138,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7833002753140545551, guid: 912d3fb7a40cb5148bad835777591d22,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8193980812625354706, guid: 912d3fb7a40cb5148bad835777591d22,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 912d3fb7a40cb5148bad835777591d22, type: 3}
 --- !u!4 &5675825479986251212 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5060606270578113660, guid: 912d3fb7a40cb5148bad835777591d22,
+    type: 3}
+  m_PrefabInstance: {fileID: 648086944866974128}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7226620593695908287 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7833002753140545551, guid: 912d3fb7a40cb5148bad835777591d22,
     type: 3}
   m_PrefabInstance: {fileID: 648086944866974128}
   m_PrefabAsset: {fileID: 0}
