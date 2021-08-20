@@ -14,7 +14,7 @@ namespace RPG.Stats
 
         private void Update()
         {
-            GetComponent<Text>().text = String.Format("{0:0}", baseStats.CalculateLevel()); //소수점 어디까지?:0
+            GetComponent<Text>().text = String.Format("{0:0}", baseStats.GetLevel()); //소수점 어디까지?:0
         }
     }
 }

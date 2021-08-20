@@ -1,4 +1,7 @@
-﻿using RPG.Attributes;
+﻿using System.Collections;
+using System.Collections.Generic;
+using GameDevTV.Utils;
+using RPG.Attributes;
 using RPG.Core;
 using RPG.Movement;
 using RPG.Saving;
@@ -7,24 +10,33 @@ using UnityEngine;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction, ISaveable
+    public class Fighter : MonoBehaviour, IAction, ISaveable, IModifierProvider
     {
         [SerializeField] float timeBetweenAttacks= 1f;
         [SerializeField] Transform rightHandTransform = null;
         [SerializeField] Transform leftHandTransform = null;
-        [SerializeField] Weapon defaultWeapon = null;
+        [SerializeField] Weapon defaultWeapon;
 
         float timeSinceLastAttack = Mathf.Infinity;
         [SerializeField] Health target;
-        Weapon currentWeapon = null;
+        LazyValue<Weapon> currentWeapon = null;
 
-
+        private void Awake()
+        {
+            currentWeapon = new LazyValue<Weapon>(GetInitialWeapon);
+        }
         private void Start()
         {
             if(currentWeapon ==null)
-            EquipWeapon(defaultWeapon);
+            {
+                currentWeapon.ForceInit();
+            }
         }
-
+        private Weapon GetInitialWeapon()
+        {
+            AttachWeapon(defaultWeapon);
+            return defaultWeapon;
+        }
         private void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
@@ -45,7 +57,12 @@ namespace RPG.Combat
         public void EquipWeapon(Weapon weapon)
         {
             //if (weapon == null) return;
-            currentWeapon = weapon;
+            currentWeapon.value = weapon;
+            AttachWeapon(weapon);
+        }
+
+        private void AttachWeapon(Weapon weapon)
+        {
             Animator animator = GetComponent<Animator>();
             weapon.Spawn(rightHandTransform, leftHandTransform, animator);
         }
@@ -89,8 +106,8 @@ namespace RPG.Combat
             if (target == null) return;
                 float damage = GetComponent<BaseStats>().GetStat(Stat.Damage);
             Debug.Log(damage);
-            if (currentWeapon.HasProjecttile())
-                currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target, gameObject, damage);
+            if (currentWeapon.value.HasProjecttile())
+                currentWeapon.value.LaunchProjectile(rightHandTransform, leftHandTransform, target, gameObject, damage);
             else
             {
                 target.TakeDamage(gameObject, damage);
@@ -102,7 +119,7 @@ namespace RPG.Combat
         }
         private bool GetIsInRange()
         {
-            return Vector3.Distance(target.transform.position, transform.position) < currentWeapon.GetWeaponRange();
+            return Vector3.Distance(target.transform.position, transform.position) < currentWeapon.value.GetWeaponRange();
         }
 
         public void Attack(GameObject combatTarget)
@@ -117,7 +134,21 @@ namespace RPG.Combat
             target = null;
             GetComponent<Mover>().Cancel();
         }
+        public IEnumerable<float> GetAdditiveModifires(Stat stat) //foreach 문에 쓰기 편하다. 여기서 리턴할 값들 리스트를 만든다. 이를 tor가 받아서 리턴하게 된다.
+        {
+            if(stat == Stat.Damage)
+            {
+                yield return currentWeapon.value.GetWeaponDamage(); //return type = IEnumerable<float>
+            }
+        }
 
+        public IEnumerable<float> GetPercentageModifires(Stat stat)
+        {
+            if (stat == Stat.Damage)
+            {
+                yield return currentWeapon.value.GetWeaponPercentageBouns(); //return type = IEnumerable<float>
+            }
+        }
         private void StopAttack()
         {
             GetComponent<Animator>().ResetTrigger("attack");
@@ -126,14 +157,14 @@ namespace RPG.Combat
 
         public object CaptureState()
         {
-            Debug.Log(currentWeapon.name);
-            return currentWeapon.name;
+            Debug.Log(currentWeapon.value.name);
+            return currentWeapon.value.name;
         }
 
         public void RestoreState(object state)
         {
             string weaponname = (string)state;
-            //Debug.Log("RestoreState: "+weaponname);
+            Debug.Log("RestoreState: "+weaponname);
             Weapon weapon = Resources.Load<Weapon>(weaponname);
             EquipWeapon(weapon);
         }

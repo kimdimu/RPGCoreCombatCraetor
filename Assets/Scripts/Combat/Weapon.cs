@@ -4,10 +4,12 @@ using UnityEngine;
 namespace RPG.Combat
 {
     [CreateAssetMenu(fileName = "Weapon", menuName = "Weapon/Make new Weapon", order = 0)]
+    [System.Serializable]
     public class Weapon : ScriptableObject
     {
         [SerializeField] float weaponRange = 2f;
         [SerializeField] float weaponDamage = 5f;
+        [SerializeField] float percentageBonus = 0;
         [SerializeField] GameObject equippedPrefab = null;
         [SerializeField] AnimatorOverrideController animatorOverride = null;
         [SerializeField] bool isRightHanded = true;
@@ -76,6 +78,10 @@ namespace RPG.Combat
         public float GetWeaponDamage()
         {
             return weaponDamage;
+        }
+        public float GetWeaponPercentageBouns()
+        {
+            return percentageBonus;
         }
     }
 }

@@ -10,9 +10,12 @@ namespace RPG.Movement
     {
         NavMeshAgent NavMeshAgent;
         [SerializeField] float maxSpeed = 5f;
-        private void Start()
+        private void Awake() 
         {
             NavMeshAgent = GetComponent<NavMeshAgent>();
+        }
+        private void Start()
+        {
         }
         void Update()
         {
@@ -47,15 +50,17 @@ namespace RPG.Movement
 
         public object CaptureState()
         {
-            return new SerializableVector3( transform.position);//원래 벡터3 안되는데 이건 됨
+            return new SerializableVector3(transform.position);//원래 벡터3 안되는데 이건 됨
         }
-        
+
         public void RestoreState(object state)
         {
             SerializableVector3 position = (SerializableVector3)state;
-            GetComponent<NavMeshAgent>().enabled = false;
+            NavMeshAgent.enabled = false;
             transform.position = position.ToVector();
-            GetComponent<NavMeshAgent>().enabled = true;
+            NavMeshAgent.enabled = true;
+            Debug.Log(position);
+            GetComponent<ActionScheduler>().CancelCurAction();
         }
     }
 }

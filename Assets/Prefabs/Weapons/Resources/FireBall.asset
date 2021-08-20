@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FireBall
   m_EditorClassIdentifier: 
   weaponRange: 20
-  weaponDamage: 10
+  weaponDamage: 9
   equippedPrefab: {fileID: 0}
   animatorOverride: {fileID: 0}
   isRightHanded: 0

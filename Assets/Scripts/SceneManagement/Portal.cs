@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RPG.Control;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +38,9 @@ namespace RPG.SceneManagement
             DontDestroyOnLoad(gameObject);
 
             Fader fader = FindObjectOfType<Fader>();
-            
+            PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            player.enabled=false;
+
             yield return fader.FadeOut(fadeOutTime);
 
             //Save cur lev
@@ -45,6 +48,8 @@ namespace RPG.SceneManagement
             savingWrapper.Save();//바뀌기전
 
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            PlayerController newplayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            newplayer.enabled = false;
 
             //Load cur lev
             savingWrapper.Load();//바뀐후
@@ -57,7 +62,9 @@ namespace RPG.SceneManagement
 
             yield return new WaitForSeconds(fadeWaitTime);
 
-            yield return fader.FadeIn(fadeInTime);
+            fader.FadeIn(fadeInTime);//안기다릴래!
+            //yield return fader.FadeIn(fadeInTime); 이 초를 기다린다는 뜻.
+            newplayer.enabled = true;
             Destroy(gameObject);
         }
 

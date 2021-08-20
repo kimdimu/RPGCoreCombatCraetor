@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameDevTV.Utils;
+using System;
 using UnityEngine;
 
 namespace RPG.Stats
@@ -14,26 +15,40 @@ namespace RPG.Stats
         [SerializeField] CharacterClass characterClass;
         [SerializeField] Progression progression = null;
         [SerializeField] GameObject levelUpParticleEffect = null;
+        [SerializeField] bool shouldUseModifier = false;
 
-        int curLevel = 0;
+        LazyValue<int> curLevel;
+        Experience experience;
+        private void Awake()
+        {
+            curLevel = new LazyValue<int>(CalculateLevel);
+            experience = GetComponent<Experience>();
+        }
 
         private void Start()
         {
-            curLevel = CalculateLevel();
-            Experience experience = GetComponent<Experience>();
+            curLevel.ForceInit();
+        }
+        private void OnEnable()
+        {
             if (experience != null)
             {
                 experience.onExpGained += UpdateLevel;
             }
-            Debug.Log("BaseStats Start");
         }
-
+        private void OnDisable()
+        {
+            if (experience != null)
+            {
+                experience.onExpGained -= UpdateLevel;
+            }
+        }
         private void UpdateLevel()
         {
             int newLevel = CalculateLevel();
-            if (newLevel > curLevel)
+            if (newLevel > curLevel.value)
             {
-                curLevel = newLevel;
+                curLevel.value = newLevel;
                 LevelUpEffect();
                 onLevelUp();
             }
@@ -47,19 +62,53 @@ namespace RPG.Stats
 
         public float GetStat(Stat stat)
         {
+            return (GetBaseStat(stat) + GetAdditiveModifier(stat))* (1 + GetPercentageModifier(stat)/100);
+        }
+
+        private float GetBaseStat(Stat stat)
+        {
             return progression.GetStat(stat, characterClass, GetLevel());
         }
 
         public int GetLevel()
         {
-            if (curLevel < 1)
+            if (curLevel.value < 1)
             {
-                curLevel = CalculateLevel();
+                curLevel.value = CalculateLevel();
             }
-            return curLevel;
+            return curLevel.value;
         }
 
-        public int CalculateLevel()
+        private float GetAdditiveModifier(Stat stat)
+        {
+            if (!shouldUseModifier) return 0;
+            float total = 0;
+            foreach(IModifierProvider modifierProvider in GetComponents<IModifierProvider>())
+            {
+                //GetEnumerator()가 있다면. IEnumerator를 반환받고, 이를 순회한다. yield return이 끝날 때 까지 GetAdditiveModifire를 돈다. 리턴된 리스트를 가지고 있다.
+                foreach (float modifier in modifierProvider.GetAdditiveModifires(stat))//IEnumerable<float>.Get..tor() 
+                {
+                    //IEnumerator it = modifierProvider.GetAdditiveModifire(stat).GetEnumerator(); //IEnumerator it = currentWeapon.GetWeaponDamage();
+                    //it.MoveNext(); //return damage;
+                    //total += it.Current; //it.Current = float damage;
+                    total += modifier;
+                }
+            }
+            return total;
+        }
+        private float GetPercentageModifier(Stat stat)
+        {
+            float total = 0;
+            foreach (IModifierProvider modifierProvider in GetComponents<IModifierProvider>())
+            {
+                foreach (float modifier in modifierProvider.GetPercentageModifires(stat))
+                { 
+                    total += modifier;
+                }
+            }
+            return total;
+        }
+        private int CalculateLevel()
         {
             Experience experience = GetComponent<Experience>();
             if (experience == null) return startingLevel;
