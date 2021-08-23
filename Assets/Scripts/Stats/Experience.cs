@@ -23,7 +23,7 @@ namespace RPG.Stats
 
         public void RestoreState(object state)
         {
-            Debug.Log(experiencePoints);
+            //Debug.Log(experiencePoints);
             experiencePoints = (float)state;
         }
 

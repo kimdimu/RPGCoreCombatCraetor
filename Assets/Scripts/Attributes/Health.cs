@@ -12,6 +12,7 @@ namespace RPG.Attributes
     {
         [SerializeField] float regenpPersentage = 70f;
         [SerializeField] TakeDamageEvent takeDamage;
+        [SerializeField] UnityEvent onDie;
         bool isDead = false;
 
 
@@ -29,6 +30,8 @@ namespace RPG.Attributes
             healthPoints.ForceInit();
             //이 때 LazyValue에 넣은 GetInitialHealth을 실행하면서 초기화된다.
         }
+
+
         private float GetInitialHealth()
         {
             return GetComponent<BaseStats>().GetStat(Stat.Health);
@@ -53,11 +56,24 @@ namespace RPG.Attributes
             takeDamage.Invoke(damage);
             if (healthPoints.value <= 0)
             {
+                onDie.Invoke();
                 Die();
                 AwardExp(instigator);
             }
         }
 
+        public void Heal(float healthToRestore)
+        {
+            healthPoints.value = Mathf.Min(healthPoints.value + healthToRestore, GetMaxHealthPoints());
+            if (healthPoints.value + healthToRestore > GetMaxHealthPoints())
+            {
+                healthPoints.value = GetMaxHealthPoints();
+            }
+            else
+            {
+                healthPoints.value += healthToRestore;
+            }
+        }
         public float GetHealthPoints()
         {
             return healthPoints.value;
@@ -106,7 +122,6 @@ namespace RPG.Attributes
         public void RestoreState(object state)
         {
             healthPoints.value = (float)state;
-            Debug.Log(healthPoints.value);
             if (healthPoints.value <= 0)
             {
                 Die();

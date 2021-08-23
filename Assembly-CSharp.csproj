@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Combat\IDamage.cs" />
     <Compile Include="Assets\Scripts\Combat\Projectile.cs" />
     <Compile Include="Assets\Scripts\Combat\Weapon.cs" />
+    <Compile Include="Assets\Scripts\Combat\WeaponConfig.cs" />
     <Compile Include="Assets\Scripts\Combat\WeaponPickUp.cs" />
     <Compile Include="Assets\Scripts\Control\AIController.cs" />
     <Compile Include="Assets\Scripts\Control\CursorType.cs" />

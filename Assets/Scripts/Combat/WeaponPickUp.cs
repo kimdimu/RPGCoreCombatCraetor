@@ -1,4 +1,5 @@
-﻿using RPG.Control;
+﻿using RPG.Attributes;
+using RPG.Control;
 using System.Collections;
 using UnityEngine;
 
@@ -6,13 +7,29 @@ namespace RPG.Combat
 {
     public class WeaponPickUp : MonoBehaviour, IRaycastable
     {
-        [SerializeField] Weapon weapon = null;
+        [SerializeField] WeaponConfig weapon = null;
+        [SerializeField] float healthToRestore = 0;
         [SerializeField] float respawnTime = 5;
 
-        private void PickUp(Fighter other)
+        private void OnTriggerEnter(Collider other)
         {
-            other.EquipWeapon(weapon);
-            StartCoroutine(HideForSeconds(respawnTime));//이 겜오브젝트를 비활성화하면 코루틴이 멈추므로 자식을 비활성화.
+            if(other.gameObject.tag =="Player")
+            {
+                PickUp(other.gameObject);
+            }
+        }
+
+        private void PickUp(GameObject other)
+        {
+            if (weapon != null)
+            {
+                other.GetComponent<Fighter>().EquipWeapon(weapon);
+            }
+            if(healthToRestore>0)
+            {
+                other.GetComponent<Health>().Heal(healthToRestore);
+            }
+                StartCoroutine(HideForSeconds(respawnTime));//이 겜오브젝트를 비활성화하면 코루틴이 멈추므로 자식을 비활성화.
         }
 
         IEnumerator HideForSeconds(float seconds)
@@ -36,7 +53,7 @@ namespace RPG.Combat
         {
             if(Input.GetMouseButtonDown(0))
             {
-                PickUp(callingController.GetComponent<Fighter>());
+                PickUp(callingController.gameObject);
             }
             return true;
         }

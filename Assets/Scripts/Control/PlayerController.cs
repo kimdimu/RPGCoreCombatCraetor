@@ -23,7 +23,7 @@ namespace RPG.Control
 
         [SerializeField]  CursorMapping[] cursorMappings = null;
         [SerializeField] float maxNMProjectionDist = 1f;
-        [SerializeField] float maxNavPathLentgh = 40f;
+        [SerializeField] float raycastRadius = 1f;
 
         private void Awake()
         {
@@ -73,7 +73,7 @@ namespace RPG.Control
 
         RaycastHit[] RaycastAllSorted()
         {
-            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            RaycastHit[] hits = Physics.SphereCastAll(GetMouseRay(), raycastRadius);
             float[] distances = new float[hits.Length];
             for (int i = 0; i < hits.Length; i++)
             {
@@ -110,7 +110,7 @@ namespace RPG.Control
             bool hasHit = RaycastNavMesh(out target);
             if (hasHit)
             {
-                //print(hit.transform.name);
+                if (!GetComponent<Mover>().CanMoveTo(target)) return false;
 
                 if (Input.GetMouseButton(0))
                 {
@@ -139,26 +139,15 @@ namespace RPG.Control
 
             target = navMeshHit.position;
 
-            NavMeshPath path =new NavMeshPath();
-            bool hasPath = NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
-            if (!hasPath) return false; //완전한 경로가 아니라면? false
-            if (path.status != NavMeshPathStatus.PathComplete) return false;
-            if (GetPathLength(path) > maxNavPathLentgh) return false;
+            //NavMeshPath path =new NavMeshPath();
+            //bool hasPath = NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
+            //if (!hasPath) return false; //완전한 경로가 아니라면? false
+            //if (path.status != NavMeshPathStatus.PathComplete) return false;
+            //if (GetPathLength(path) > maxNavPathLentgh) return false;
             return true;
         }
 
-        private float GetPathLength(NavMeshPath path)
-        {
-            float totalLength=0;
-            if (path.corners.Length < 2) return totalLength;
-            
-            for (int i = 0; i < path.corners.Length-1; i++)
-            {
-                float dist = Vector2.Distance(path.corners[i], path.corners[i + 1]);
-                totalLength += dist;
-            }
-            return totalLength;
-        }
+        
 
         private CursorMapping GetCursorMapping(CursorType cursorType)
         {

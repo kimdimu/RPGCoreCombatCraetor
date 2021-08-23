@@ -25,6 +25,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1614431958776894779, guid: cc5b9639102a4574797ba7aafbdb9e6c,
+        type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1614431958776894779, guid: cc5b9639102a4574797ba7aafbdb9e6c,
+        type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1614431958776894779, guid: cc5b9639102a4574797ba7aafbdb9e6c,
+        type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 2904123465055034740}
+    - target: {fileID: 1614431958776894779, guid: cc5b9639102a4574797ba7aafbdb9e6c,
+        type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1614431958776894779, guid: cc5b9639102a4574797ba7aafbdb9e6c,
+        type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: Aggrevate
+      objectReference: {fileID: 0}
+    - target: {fileID: 1614431958776894779, guid: cc5b9639102a4574797ba7aafbdb9e6c,
+        type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2752454310016117315, guid: cc5b9639102a4574797ba7aafbdb9e6c,
         type: 3}
       propertyPath: m_Name
@@ -38,7 +68,7 @@ PrefabInstance:
     - target: {fileID: 3292367182993150359, guid: cc5b9639102a4574797ba7aafbdb9e6c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4025628503244034443, guid: cc5b9639102a4574797ba7aafbdb9e6c,
         type: 3}

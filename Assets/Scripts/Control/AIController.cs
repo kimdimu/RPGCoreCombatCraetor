@@ -1,5 +1,4 @@
-﻿using System;
-using GameDevTV.Utils;
+﻿using GameDevTV.Utils;
 using RPG.Attributes;
 using RPG.Combat;
 using RPG.Core;
@@ -11,11 +10,13 @@ namespace RPG.Control
     {
         [SerializeField] float chaseDistance = 5f;
         [SerializeField] float suspicionTime = 3f;
+        [SerializeField] float agroCooldownTime = 5f;
         [SerializeField] PatrolPath patrolPath;
         [SerializeField] float waypointTolerance = 1f;
         [SerializeField] float waypointDwellTime = 3f;
-        [Range(0, 1)] //0~1의 슬라이더를 인스펙터에 보여줌
+        [Range(0, 1)]
         [SerializeField] float patrolMoveSpeed = 0.2f;
+        [SerializeField] float shoutDist = 5f;
 
         Fighter fighter;
         Health health;
@@ -24,7 +25,9 @@ namespace RPG.Control
         LazyValue<Vector3> guardPosition;
         float timeSinceLastSawPlayer = Mathf.Infinity;
         float timeSinceArriveAtWaypoint = Mathf.Infinity;
-        int patrolPathIdx=0;
+        float timeSinceAggrevate = Mathf.Infinity;
+        int patrolPathIdx = 0;
+
         private void Awake()
         {
             guardPosition = new LazyValue<Vector3>(GetInitGPos);
@@ -45,43 +48,38 @@ namespace RPG.Control
         }
         private void Update()
         {
-            //if(Vector3.Distance(player.transform.position, transform.position)<chaseDisance)
-            //{
-            //    print(this.name + " should chase.");
-            //}
             if (health.IsDead()) return;
-            if (InAttackRangeOfPlayer() && fighter.CanAttack(player))
+            if (IsAggrevated() && fighter.CanAttack(player))
             {
                 AttackBehaviour();
-                //isSuspicion = true;
             }
-            else if (timeSinceLastSawPlayer < suspicionTime)// || (timeSinceArriveAtWaypoint < waypointDwellTime))//isspic
+            else if (timeSinceLastSawPlayer < suspicionTime)
             {
-                //suspicion
                 SuspicionBehaviour();
-
-                // fighter.Cancel();
-
-                //if (timeSinceLastSawPlayer > suspicionTime)
-                //{
-                //    isSuspicion = false;
-                //}
             }
             else
             {
                 PatrolBehaviour();
-                //timeSinceArriveAtWaypoint = waypointDwellTime;
-                //fighter.Cancel();
-                //GetComponent<Mover>().StartMoveAction(GameObject.FindWithTag("Player").transform.position);
             }
 
             UpdateTimes();
+        }
+
+        public void Aggrevate()
+        {
+            if (timeSinceAggrevate >= 5f)
+            {
+                timeSinceAggrevate = 0;
+                Debug.Log(timeSinceAggrevate);
+                AggrevateNearbyEnemies();
+            }
         }
 
         private void UpdateTimes()
         {
             timeSinceLastSawPlayer += Time.deltaTime;
             timeSinceArriveAtWaypoint += Time.deltaTime;
+            timeSinceAggrevate += Time.deltaTime;
         }
 
         private void PatrolBehaviour()
@@ -97,7 +95,7 @@ namespace RPG.Control
                 nextPosition = GetCurrentWayPoint();
             }
 
-            if(timeSinceArriveAtWaypoint > waypointDwellTime)
+            if (timeSinceArriveAtWaypoint > waypointDwellTime)
                 mover.StartMoveAction(nextPosition, patrolMoveSpeed);
         }
 
@@ -110,15 +108,10 @@ namespace RPG.Control
         private void CycleWaypoint()
         {
             patrolPathIdx = patrolPath.GetNextIndex(patrolPathIdx);
-            //if (patrolPathIdx + 1 >= patrolPath.transform.childCount)//탭탭!
-            //    patrolPathIdx = 0;
-            //else
-            //    patrolPathIdx += 1;
         }
 
         private Vector3 GetCurrentWayPoint()
         {
-            //return patrolPath.transform.GetChild(patrolPathIdx).position;
             return patrolPath.GetWayPoint(patrolPathIdx);
         }
 
@@ -133,10 +126,22 @@ namespace RPG.Control
             fighter.Attack(player);
         }
 
-        private bool InAttackRangeOfPlayer()
+        private void AggrevateNearbyEnemies()
+        {
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, shoutDist, Vector3.up, 0);
+            foreach (RaycastHit hit in hits)
+            {
+                AIController ai = hit.collider.GetComponent<AIController>();
+                if (ai == null) continue;
+                ai.Aggrevate();
+            }
+        }
+
+        private bool IsAggrevated()
         {
             float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
-            return distanceToPlayer < chaseDistance;
+
+            return distanceToPlayer < chaseDistance || timeSinceAggrevate < agroCooldownTime;
         }
         //call by unity
         private void OnDrawGizmosSelected()
